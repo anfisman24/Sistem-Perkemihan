@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Perkemihan (Urinaria) - Interactive Presentation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        medical: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0f766e;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tab-active {
+            background-color: #0d9488;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="input_file_0.jpg" alt="Logo Unsil" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0f766e/ffffff?text=UNSIL';">
+                <div>
+                    <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">ANFISMAN - Kelompok 5</h1>
+                    <p class="text-xs text-brand-700 font-medium hidden sm:block">Sistem Perkemihan (Urinaria)</p>
+                </div>
+            </div>
+
+            <!-- Global Action Bar -->
+            <div class="flex items-center gap-2">
+                <button onclick="openModal('quickCalcModal')" class="px-3 py-1.5 text-xs font-semibold bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-lg transition-colors flex items-center gap-1.5 border border-brand-200">
+                    <i class="fa-solid fa-calculator text-brand-600"></i>
+                    <span>Kalkulator GFR</span>
+                </button>
+                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container with Sidebar + Content Area -->
+    <div class="flex-1 flex max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6 gap-6">
+
+        <!-- Navigation Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 lg:static lg:w-64 lg:border-r-0 lg:bg-transparent transition-transform duration-300 ease-in-out flex flex-col shrink-0">
+            <div class="p-4 lg:p-0 flex flex-col h-full">
+                <!-- Mobile Sidebar Close Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-slate-200 lg:hidden mb-4">
+                    <span class="font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-book-medical text-brand-600"></i> Menu Navigasi
+                    </span>
+                    <button id="closeSidebarBtn" class="p-1 rounded-md text-slate-500 hover:bg-slate-100">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex-1 overflow-y-auto space-y-1">
+                    <div class="px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Modul Utama</div>
+
+                    <button onclick="switchTab('tab-cover')" id="nav-tab-cover" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left tab-active">
+                        <i class="fa-solid fa-graduation-cap w-5 text-center text-base"></i>
+                        <span>1. Cover & Tim</span>
+                    </button>
+
+                    <button onclick="switchTab('tab-materi')" id="nav-tab-materi" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left">
+                        <i class="fa-solid fa-microscope w-5 text-center text-base"></i>
+                        <span>2. Materi Anatomi & Fisiologi</span>
+                    </button>
+
+                    <button onclick="switchTab('tab-diskusi')" id="nav-tab-diskusi" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left">
+                        <i class="fa-solid fa-comments w-5 text-center text-base"></i>
+                        <span>3. Sesi Diskusi & Kuis</span>
+                    </button>
+
+                    <button onclick="switchTab('tab-kesimpulan')" id="nav-tab-kesimpulan" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left">
+                        <i class="fa-solid fa-list-check w-5 text-center text-base"></i>
+                        <span>4. Rangkuman / Kesimpulan</span>
+                    </button>
+
+                    <button onclick="switchTab('tab-pustaka')" id="nav-tab-pustaka" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left">
+                        <i class="fa-solid fa-book-bookmark w-5 text-center text-base"></i>
+                        <span>5. Daftar Pustaka</span>
+                    </button>
+
+                    <button onclick="switchTab('tab-thanks')" id="nav-tab-thanks" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-all text-left">
+                        <i class="fa-solid fa-heart w-5 text-center text-base"></i>
+                        <span>6. Ucapan Terima Kasih</span>
+                    </button>
+                </div>
+
+                <!-- Footer Info -->
+                <div class="mt-4 p-3 bg-brand-900 rounded-2xl text-white text-xs text-center space-y-1 shadow-md">
+                    <p class="font-semibold text-brand-200">Universitas Siliwangi</p>
+                    <p class="text-[11px] text-slate-300">Pendidikan Biologi &copy; 2026</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 min-w-0">
+
+            <!-- TAB 1: COVER -->
+            <section id="tab-cover" class="tab-content space-y-6">
+                <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-brand-100 pointer-events-none">
+                        <i class="fa-solid fa-dna text-[240px]"></i>
+                    </div>
+
+                    <div class="relative z-10 flex flex-col items-center text-center space-y-6">
+                        <!-- Logo Unsil -->
+                        <div class="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-inner">
+                            <img src="input_file_0.jpg" alt="Logo Universitas Siliwangi" class="h-28 w-auto object-contain hover:scale-105 transition-transform" onerror="this.onerror=null; this.src='https://placehold.co/150x150/0f766e/ffffff?text=UNSIL';">
+                            <p class="mt-2 text-xs font-semibold text-white">Pict Identitas</p>
+                        </div>
+
+                        <div>
+                            <span class="inline-block px-4 py-1.5 rounded-full bg-brand-500/30 text-brand-200 border border-brand-400/30 text-xs font-semibold tracking-wider uppercase mb-3">
+                                Makalah Anatomi Fisiologi Tubuh Manusia
+                            </span>
+                            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white max-w-2xl leading-tight">
+                                SISTEM PERKEMIHAN (URINARIA)
+                            </h1>
+                            <p class="text-slate-300 text-sm sm:text-base mt-2 max-w-xl">
+                                Kajian Komprehensif Anatomi Makroskopis, Mikroskopis Nefron, Fisiologi Pembentukan Urine, Hormonal & Keseimbangan Asam-Basa
+                            </p>
+                        </div>
+
+                        <div class="w-20 h-1 bg-brand-500 rounded-full my-2"></div>
+
+                        <!-- Dosen & Institusi -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl text-left text-xs sm:text-sm">
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                                <span class="text-brand-300 font-medium block text-xs">Dosen Pengampu:</span>
+                                <span class="font-bold text-white text-base">Dr. Dani Ramdani, S.Pd., M.Pd.</span>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                                <span class="text-brand-300 font-medium block text-xs">Institusi & Tahun:</span>
+                                <span class="font-bold text-white">Jurusan Pendidikan Biologi, FKIP</span>
+                                <span class="block text-slate-300 text-xs">Universitas Siliwangi - 2026</span>
+                            </div>
+                        </div>
+
+                        <!-- Kelompok 5 Members -->
+                        <div class="w-full max-w-2xl bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/10 text-left">
+                            <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+                                <h3 class="font-bold text-brand-200 flex items-center gap-2 text-sm sm:text-base">
+                                    <i class="fa-solid fa-users"></i> Disusun Oleh Kelompok 5:
+                                </h3>
+                                <span class="text-xs bg-brand-500 text-white px-2.5 py-0.5 rounded-full font-semibold">Kelas Biologi</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+                                <div class="bg-brand-950/40 p-3 rounded-xl border border-white/5">
+                                    <p class="font-bold text-white">Syifa Ainnur Rahmah</p>
+                                    <p class="text-brand-300 font-mono text-xs">NPM: 242154111073</p>
+                                </div>
+                                <div class="bg-brand-950/40 p-3 rounded-xl border border-white/5">
+                                    <p class="font-bold text-white">Dewi Ratnasari</p>
+                                    <p class="text-brand-300 font-mono text-xs">NPM: 242154111074</p>
+                                </div>
+                                <div class="bg-brand-950/40 p-3 rounded-xl border border-white/5">
+                                    <p class="font-bold text-white">Widi Fitni Dianti</p>
+                                    <p class="text-brand-300 font-mono text-xs">NPM: 242154111143</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="switchTab('tab-materi')" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                                <span>Mulai Pelajari Materi</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MATERI SYSTEM (With Sub-Tabs or Accordion) -->
+            <section id="tab-materi" class="tab-content hidden space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-brand-600"></i> Modul Pembelajaran Sistem Perkemihan
+                        </h2>
+                        <p class="text-xs text-slate-500">Pilih sub-materi di bawah untuk menjelajahi pembahasan terintegrasi beserta visual gambar.</p>
+                    </div>
+                </div>
+
+                <!-- Sub-Materi Nav Buttons -->
+                <div class="flex flex-wrap gap-2 pb-2">
+                    <button onclick="switchSubTab('materi-a')" id="btn-sub-a" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-brand-600 text-white shadow-sm border border-brand-600">A. Anatomi Makroskopis</button>
+                    <button onclick="switchSubTab('materi-b')" id="btn-sub-b" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">B. Mikroskopis Nefron</button>
+                    <button onclick="switchSubTab('materi-c')" id="btn-sub-c" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">C. Filtrasi Glomerulus</button>
+                    <button onclick="switchSubTab('materi-d')" id="btn-sub-d" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">D. Reabsorpsi Tubulus</button>
+                    <button onclick="switchSubTab('materi-e')" id="btn-sub-e" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">E. Sekresi (Augmentasi)</button>
+                    <button onclick="switchSubTab('materi-f')" id="btn-sub-f" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">F. Sistem RAAS</button>
+                    <button onclick="switchSubTab('materi-g')" id="btn-sub-g" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">G. Hormon ADH & ANP</button>
+                    <button onclick="switchSubTab('materi-h')" id="btn-sub-h" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">H. Keseimbangan Asam-Basa</button>
+                    <button onclick="switchSubTab('materi-i')" id="btn-sub-i" class="subnav-btn px-3.5 py-2 text-xs font-semibold rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200">I. Kelainan Sistem</button>
+                </div>
+
+                <!-- SUB TAB CONTENT A: Anatomi Makroskopis -->
+                <div id="materi-a" class="sub-materi-content bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian A</span>
+                        <h3 class="text-lg font-bold text-slate-900">Anatomi Makroskopis Ginjal, Ureter, Kandung Kemih, dan Uretra</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-4 text-slate-700 text-sm leading-relaxed">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-brand-800 text-base mb-1">1. Ginjal (Ren)</h4>
+                                <p>Sepasang organ berbentuk kacang merah di bagian belakang rongga perut (retroperitoneal). Terdiri atas 3 bagian utama:</p>
+                                <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600 font-medium">
+                                    <li><strong class="text-slate-800">Korteks Renalis:</strong> Bagian terluar mengandung korpuskulus ginjal.</li>
+                                    <li><strong class="text-slate-800">Medula Renalis:</strong> Bagian dalam tersusun atas piramida ginjal.</li>
+                                    <li><strong class="text-slate-800">Pelvis Renalis:</strong> Muara pengumpul urine dari kaliks mayor/minor menuju ureter.</li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-brand-800 text-base mb-1">2. Ureter</h4>
+                                <p>Saluran tabung berdinding otot polos yang menghubungkan pelvis renalis ke kandung kemih. Pengaliran urine dibantu oleh <strong>gerakan peristaltik</strong> otot polos serta gravitasi.</p>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-brand-800 text-base mb-1">3. Kandung Kemih (Vesika Urinaria) & Uretra</h4>
+                                <p>Organ berongga fleksibel berlapis <strong>epitel transisional</strong> dan <strong>otot detrusor</strong> untuk menyimpan urine sementara. Uretra kemudian mengalirkan urine keluar tubuh saat sfingter relaksasi.</p>
+                            </div>
+                        </div>
+
+                        <!-- Visual Card Gambar 2.1 -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_1.jpg', 'Pict 1. Struktur Makroskopis Ginjal')">
+                                <img src="input_file_1.jpg" alt="Struktur Makroskopis Ginjal" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2.1+Ginjal';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 1. Struktur Makroskopis Ginjal</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Soesilawati (2020)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT B: Anatomi Mikroskopis Nefron -->
+                <div id="materi-b" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian B</span>
+                        <h3 class="text-lg font-bold text-slate-900">Anatomi Mikroskopis Nefron</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <p>Nefron adalah unit fungsional terkecil ginjal (± 1 juta per ginjal). Bagian-bagian utamanya meliputi:</p>
+
+                            <div class="space-y-3">
+                                <div class="p-3 bg-brand-50/50 rounded-xl border border-brand-100">
+                                    <h4 class="font-bold text-brand-900 text-sm">1. Korpuskulus Ginjal (Badan Malpighi)</h4>
+                                    <p class="text-xs text-slate-600">Terdiri dari <strong>Glomerulus</strong> (anyaman kapiler fenestra) dan <strong>Kapsula Bowman</strong>. Tempat filtrasi plasma darah menghasilkan filtrat glomerulus.</p>
+                                </div>
+
+                                <div class="p-3 bg-brand-50/50 rounded-xl border border-brand-100">
+                                    <h4 class="font-bold text-brand-900 text-sm">2. Tubulus Kontortus Proksimal (TKP)</h4>
+                                    <p class="text-xs text-slate-600">Dilapisi epitel kubus selapis dengan padat mikrovili (<em>brush border</em>) dan kaya mitokondria. Tempat utama reabsorpsi (glukosa, asam amino, air, Na+).</p>
+                                </div>
+
+                                <div class="p-3 bg-brand-50/50 rounded-xl border border-brand-100">
+                                    <h4 class="font-bold text-brand-900 text-sm">3. Lengkung Henle (Loop of Henle)</h4>
+                                    <p class="text-xs text-slate-600">Terdiri dari segmen desenden (permeabel air) dan asenden (aktif memompa NaCl, impermeabel air) yang membentuk gradien osmotik medula.</p>
+                                </div>
+
+                                <div class="p-3 bg-brand-50/50 rounded-xl border border-brand-100">
+                                    <h4 class="font-bold text-brand-900 text-sm">4. Tubulus Kontortus Distal (TKD) & Duktus Kolektivus</h4>
+                                    <p class="text-xs text-slate-600">Epitel kubus tanpa brush border menonjol. Memiliki <em>Macula Densa</em> untuk regulasi umpan balik, serta sensitif terhadap Aldosteron dan ADH.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Card Gambar 2.2 -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_2.jpg', 'Pict 2. Struktur Nefron')">
+                                <img src="input_file_2.jpg" alt="Struktur Nefron" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2.2+Nefron';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 2. Struktur Nefron</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Soesilawati (2020)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT C: Fisiologi Filtrasi Glomerulus -->
+                <div id="materi-c" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian C</span>
+                        <h3 class="text-lg font-bold text-slate-900">Fisiologi Filtrasi Glomerulus & GFR</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-4 text-slate-700 text-sm leading-relaxed">
+                            <p>Proses filtrasi plasma darah terjadi di korpuskulus ginjal melewati 3 lapisan penghalang filtrasi: <strong>Endotel Fenestra</strong>, <strong>Membran Basal Glomerulus</strong>, dan <strong>Podosit (Celah Filtrasi)</strong>.</p>
+
+                            <!-- Formula Card -->
+                            <div class="p-4 bg-medical-50 border border-medical-500/30 rounded-xl space-y-2">
+                                <h4 class="font-bold text-medical-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-calculator text-medical-700"></i> Rumus Tekanan Filtrasi Bersih (NFP)
+                                </h4>
+                                <div class="bg-white p-3 rounded-lg border border-medical-200 font-mono text-xs sm:text-sm font-semibold text-slate-800 text-center">
+                                    NFP = P<sub>G</sub> - (P<sub>B</sub> + &pi;<sub>G</sub>)
+                                </div>
+                                <p class="text-xs text-slate-600">
+                                    Contoh Fisiologis Normal: <strong>55 mmHg</strong> (Hidrostatik Glomerulus) - [<strong>15 mmHg</strong> (Kapsula Bowman) + <strong>30 mmHg</strong> (Osmotik Koloid Plasma)] = <span class="text-brand-700 font-bold">+10 mmHg</span>.
+                                </p>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-900 text-sm">Laju Filtrasi Glomerulus (GFR)</h4>
+                                <p class="text-xs text-slate-600 mt-1">Laju normal orang dewasa sehat: <strong>± 125 mL/menit</strong> (sekitar <strong>180 Liter/hari</strong>). Hanya ± 1-2 Liter yang diekskresikan sebagai urine akhir, selebihnya direabsorpsi.</p>
+                            </div>
+                        </div>
+
+                        <!-- Visual Card Gambar 2.3 -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_3.jpg', 'Pict 3. Korpuskulus dan Filtrasi Glomerulus')">
+                                <img src="input_file_3.jpg" alt="Penghalang Filtrasi Glomerulus" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2.3+Filtrasi';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 3. Korpuskulus dan Filtrasi Glomerulus</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Soesilawati (2020)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT D: Reabsorpsi Tubulus -->
+                <div id="materi-d" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian D</span>
+                        <h3 class="text-lg font-bold text-slate-900">Mekanisme Reabsorpsi Tubulus (Air, Glukosa, Elektrolit)</h3>
+                    </div>
+
+                    <div class="space-y-6">
+                        <p class="text-sm text-slate-700">Reabsorpsi mengembalikan zat terlarut vital dan air dari filtrat tubulus kembali ke darah kapiler peritubular.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Visual Card Gambar 2.1 Reabsorpsi Glukosa -->
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                                <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_4.jpg', 'Pict 4. Reabsorpsi Glukosa')">
+                                    <img src="input_file_4.jpg" alt="Reabsorpsi Glukosa SGLT1 SGLT2" class="w-full h-auto object-contain max-h-72 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+Reabsorpsi+Glukosa';">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                        <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                    </div>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-700">Pict 4. Reabsorpsi Glukosa</p>
+                                <p class="text-xs text-slate-500 text-left">
+                                    &gt;90% glukosa diserap kembali di segmen awal TKP melalui transporter <strong>SGLT2</strong>, sisanya via <strong>SGLT1</strong>. Jika batas ambang ginjal (&gt;180 mg/dL) terlampaui, glukosa melimpah ke urine (Glukosuria).
+                                </p>
+                            </div>
+
+                            <!-- Visual Card Gambar 2.2 Reabsorpsi Air/Elektrolit -->
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                                <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_5.jpg', 'Pict 5. Reabsorpsi Air dan Elektrolit')">
+                                    <img src="input_file_5.jpg" alt="Reabsorpsi Air dan Elektrolit Nefron" class="w-full h-auto object-contain max-h-72 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+Reabsorpsi+Air';">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                        <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                    </div>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-700">Pict 5. Reabsorpsi Air dan Elektrolit</p>
+                                <p class="text-xs text-slate-500 text-left">
+                                    Reabsorpsi air terjadi secara osmosis mengikuti gradien Na+. Terjadi secara obligat di TKP (65%) dan fakultatif di Duktus Kolektivus yang dipengaruhi hormon ADH.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT E: Sekresi Tubulus / Augmentasi -->
+                <div id="materi-e" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian E</span>
+                        <h3 class="text-lg font-bold text-slate-900">Mekanisme Sekresi Tubulus (Augmentasi)</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <p>Sekresi tubulus adalah pemindahan aktif zat dari kapiler peritubular ke lumen tubulus untuk dibuang bersama urine. Zat yang disekresi meliputi:</p>
+
+                            <ul class="space-y-2 text-xs sm:text-sm">
+                                <li class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800">1. Ion Hidrogen (H+) & Amonium (NH4+):</strong> Menjaga kestabilan pH darah.
+                                </li>
+                                <li class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800">2. Ion Kalium (K+):</strong> Disekresikan di TKD & Duktus Kolektivus di bawah regulasi Aldosteron.
+                                </li>
+                                <li class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800">3. Obat-obatan & Senyawa Asing:</strong> Penisilin, penisilin metabolit, penisilinat, dan racun via transporter OAT & OCT.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Visual Card Gambar 2.3 Sekresi Obat -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_6.jpg', 'Pict 6. Sekresi Obat pada Tubulus Proksimal')">
+                                <img src="input_file_6.jpg" alt="Sekresi Obat-obatan Tubulus Proksimal" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2.3+Sekresi+Obat';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 6. Sekresi Obat pada Tubulus Proksimal</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Modul Farmakologi Eliminasi Renal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT F: Sistem RAAS -->
+                <div id="materi-f" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian F</span>
+                        <h3 class="text-lg font-bold text-slate-900">Peran Sistem Renin-Angiotensin-Aldosteron (RAAS)</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <p>Sistem RAAS diaktifkan saat terjadi penurunan tekanan darah, aliran darah ginjal, atau penurunan kadar Na+:</p>
+
+                            <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm font-medium text-slate-700">
+                                <li class="p-2.5 bg-brand-50/50 rounded-lg border border-brand-100">
+                                    Sel jukstaglomerular melepas <strong>Renin</strong> ke darah.
+                                </li>
+                                <li class="p-2.5 bg-brand-50/50 rounded-lg border border-brand-100">
+                                    Renin mengubah <strong>Angiotensinogen</strong> (dari hati) menjadi <strong>Angiotensin I</strong>.
+                                </li>
+                                <li class="p-2.5 bg-brand-50/50 rounded-lg border border-brand-100">
+                                    Enzim <strong>ACE</strong> di kapiler paru-paru mengubah Angiotensin I menjadi <strong>Angiotensin II</strong> (Vasokonstriktor kuat).
+                                </li>
+                                <li class="p-2.5 bg-brand-50/50 rounded-lg border border-brand-100">
+                                    Angiotensin II merangsang korteks adrenal melepaskan <strong>Aldosteron</strong>, memicu retensi Na+ dan air.
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- Visual Card Gambar 2.4 RAAS -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_7.jpg', 'Pict 7. Mekanisme Sistem RAAS')">
+                                <img src="input_file_7.jpg" alt="Skema Sistem RAAS" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2.4+RAAS';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 7. Mekanisme Sistem RAAS</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Repositori ITERA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT G: Hormon ADH & ANP -->
+                <div id="materi-g" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian G</span>
+                        <h3 class="text-lg font-bold text-slate-900">Fungsi Hormon ADH (Vasopresin) dan ANP</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-4 text-slate-700 text-sm leading-relaxed">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                                <h4 class="font-bold text-brand-800 text-base">Hormon Antidiuretik (ADH / Vasopresin)</h4>
+                                <p class="text-xs text-slate-600">
+                                    Dihasilkan di hipotalamus, dilepas oleh hipofisis posterior saat osmolaritas darah tinggi. ADH berikatan dengan reseptor V2, memicu translokasi kanal air <strong>Akuaporin-2 (AQP2)</strong> ke membran sel duktus kolektivus. Hasil: Reabsorpsi air tinggi &rarr; Urine pekat.
+                                </p>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                                <h4 class="font-bold text-slate-900 text-base">Atrial Natriuretic Peptide (ANP)</h4>
+                                <p class="text-xs text-slate-600">
+                                    Dilepaskan oleh sel atrium jantung saat regangan atrium tinggi (kelebihan volume darah). ANP meningkatkan GFR dan menghambat reabsorpsi Na+ & RAAS. Hasil: Ekskresi Na+ & air tinggi (Natriuresis/Diuresis) &rarr; Urine encer & volume turun.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Visual Card Gambar 1 ADH -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_8.jpg', 'Pict 8. Mekanisme Kerja Hormon ADH')">
+                                <img src="input_file_8.jpg" alt="Mekanisme Kerja ADH Akuaporin 2" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+1+ADH';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 8. Mekanisme Kerja Hormon ADH</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Boone & Deen (2018)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT H: Keseimbangan Asam-Basa -->
+                <div id="materi-h" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Bagian H</span>
+                        <h3 class="text-lg font-bold text-slate-900">Mekanisme Pengaturan Keseimbangan Asam-Basa</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <p>Ginjal menjaga pH plasma normal (7,35 - 7,45) melalui 3 mekanisme:</p>
+
+                            <div class="space-y-2 text-xs sm:text-sm">
+                                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800 block">1. Reabsorpsi Bikarbonat (HCO3-):</strong>
+                                    ±80% HCO3- difiltrasi dan direabsorpsi di tubulus proksimal via penukar NHE3 & enzim karbonat anhidrase.
+                                </div>
+                                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800 block">2. Sekresi Ion Hidrogen (H+):</strong>
+                                    Diisolasi ke lumen tubulus menggunakan pompa H+-ATPase dan penukar Na+/H+.
+                                </div>
+                                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                    <strong class="text-brand-800 block">3. Pembentukan HCO3- Baru:</strong>
+                                    Melalui ekskresi amonium (NH4+ dari glutamin) dan asam tertitrasi (buffer H2PO4-).
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Card Gambar 2 Asam Basa -->
+                        <div class="lg:col-span-5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_9.jpg', 'Pict 9. Keseimbangan Asam-Basa')">
+                                <img src="input_file_9.jpg" alt="Mekanisme Asam Basa Bikarbonat H+" class="w-full h-auto object-contain max-h-80 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/0d9488/ffffff?text=Gambar+2+Asam+Basa';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Pict 9. Keseimbangan Asam-Basa</p>
+                            <span class="text-[11px] text-slate-400 block">Sumber: Skelton et al. (2019)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB TAB CONTENT I: Kelainan Sistem Perkemihan -->
+                <div id="materi-i" class="sub-materi-content hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-red-600 uppercase tracking-wider">Bagian I</span>
+                        <h3 class="text-lg font-bold text-slate-900">Kelainan & Patofisiologi Sistem Perkemihan</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Visual Card Gambar 3 ISK -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_10.jpg', 'Pict 10. Infeksi Saluran Kemih (ISK)')">
+                                <img src="input_file_10.jpg" alt="Lokasi Infeksi ISK" class="w-full h-auto object-contain max-h-72 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/ef4444/ffffff?text=Gambar+3+Lokasi+ISK';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-700">Pict 10. Infeksi Saluran Kemih (ISK)</p>
+                            <p class="text-xs text-slate-500 text-left">
+                                Saluran atas (Pielonefritis/Ginjal) dan Saluran bawah (Sistitis/Kandung Kemih, Uretritis/Uretra). Umumnya disebabkan oleh bakteri <em>Escherichia coli</em>.
+                            </p>
+                        </div>
+
+                        <!-- Visual Card Gambar 4 Batu Ginjal -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
+                            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-300 bg-white" onclick="expandImage('input_file_11.jpg', 'Pict 11. Batu Ginjal (Nefrolitiasis)')">
+                                <img src="input_file_11.jpg" alt="Batu Ginjal Nefrolitiasis" class="w-full h-auto object-contain max-h-72 mx-auto group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/ef4444/ffffff?text=Gambar+4+Batu+Ginjal';">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-1.5"></i> Perbesar Gambar
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-700">Pict 11. Batu Ginjal (Nefrolitiasis)</p>
+                            <p class="text-xs text-slate-500 text-left">
+                                Endapan keras mineral dan garam yang menyumbat pelvis renalis, ureter, atau kandung kemih, memicu nyeri kolik hebat dan hematuria.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Summary List of Diseases -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                        <div class="p-3 bg-red-50/50 rounded-xl border border-red-100">
+                            <h5 class="font-bold text-red-900">Glomerulonefritis</h5>
+                            <p class="text-slate-600 mt-1">Peradangan glomerulus akibat respon autoimun, memicu proteinuria & hematuria.</p>
+                        </div>
+                        <div class="p-3 bg-red-50/50 rounded-xl border border-red-100">
+                            <h5 class="font-bold text-red-900">Gagal Ginjal Akut (AKI)</h5>
+                            <p class="text-slate-600 mt-1">Penurunan fungsi ginjal mendadak akibat akumulasi sisa nitrogen (uremia).</p>
+                        </div>
+                        <div class="p-3 bg-red-50/50 rounded-xl border border-red-100">
+                            <h5 class="font-bold text-red-900">Penyakit Ginjal Kronis (CKD)</h5>
+                            <p class="text-slate-600 mt-1">Kerusakan progresif jangka panjang yang dapat memerlukan terapi dialisis.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: SESI DISKUSI & KUIS -->
+            <section id="tab-diskusi" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-brand-600"></i> Sesi Diskusi & Simulasi Interaktif
+                            </h2>
+                            <p class="text-xs text-slate-500">Uji pemahaman materi makalah melalui kuis interaktif atau ajukan pertanyaan diskusi.</p>
+                        </div>
+                    </div>
+
+                    <!-- Kuis Interaktif Section -->
+                    <div class="bg-brand-50/60 p-5 rounded-2xl border border-brand-200 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold bg-brand-600 text-white px-3 py-1 rounded-full">Kuis Mini 3 Soal</span>
+                            <span id="quizScoreDisplay" class="text-xs font-bold text-brand-800">Skor: 0 / 3</span>
+                        </div>
+
+                        <!-- Soal 1 -->
+                        <div id="quiz-q1" class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p class="font-bold text-xs sm:text-sm text-slate-800">1. Bagian nefron manakah yang menjadi tempat reabsorpsi glukosa terbesar via transporter SGLT2?</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <button onclick="checkQuiz(1, 'A', false)" class="q1-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">A. Lengkung Henle Desenden</button>
+                                <button onclick="checkQuiz(1, 'B', true)" class="q1-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">B. Tubulus Kontortus Proksimal</button>
+                                <button onclick="checkQuiz(1, 'C', false)" class="q1-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">C. Tubulus Kontortus Distal</button>
+                                <button onclick="checkQuiz(1, 'D', false)" class="q1-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">D. Duktus Kolektivus</button>
+                            </div>
+                            <p id="q1-feedback" class="text-xs font-semibold hidden"></p>
+                        </div>
+
+                        <!-- Soal 2 -->
+                        <div id="quiz-q2" class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p class="font-bold text-xs sm:text-sm text-slate-800">2. Hormon apakah yang memicu translokasi saluran air Akuaporin-2 (AQP2) untuk memekatkan urine?</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <button onclick="checkQuiz(2, 'A', false)" class="q2-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">A. Atrial Natriuretic Peptide (ANP)</button>
+                                <button onclick="checkQuiz(2, 'B', false)" class="q2-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">B. Renin</button>
+                                <button onclick="checkQuiz(2, 'C', true)" class="q2-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">C. Antidiuretic Hormone (ADH)</button>
+                                <button onclick="checkQuiz(2, 'D', false)" class="q2-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">D. Angiotensin I</button>
+                            </div>
+                            <p id="q2-feedback" class="text-xs font-semibold hidden"></p>
+                        </div>
+
+                        <!-- Soal 3 -->
+                        <div id="quiz-q3" class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p class="font-bold text-xs sm:text-sm text-slate-800">3. Berapakah estimasi laju filtrasi glomerulus (GFR) normal pada orang dewasa sehat per hari?</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <button onclick="checkQuiz(3, 'A', false)" class="q3-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">A. 1,5 Liter / hari</button>
+                                <button onclick="checkQuiz(3, 'B', true)" class="q3-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">B. 180 Liter / hari</button>
+                                <button onclick="checkQuiz(3, 'C', false)" class="q3-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">C. 50 Liter / hari</button>
+                                <button onclick="checkQuiz(3, 'D', false)" class="q3-opt p-2.5 rounded-lg border border-slate-200 text-left hover:bg-slate-50 transition-colors">D. 500 mL / hari</button>
+                            </div>
+                            <p id="q3-feedback" class="text-xs font-semibold hidden"></p>
+                        </div>
+                    </div>
+
+                    <!-- Forum Diskusi Simulation -->
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-brand-600"></i> Simulasi Forum Pertanyaan Kelompok
+                        </h3>
+
+                        <div class="flex gap-2">
+                            <input id="commentInput" type="text" placeholder="Tuliskan pertanyaan diskusi untuk Kelompok 5..." class="flex-1 px-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <button onclick="addComment()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700 transition-colors">Kirim</button>
+                        </div>
+
+                        <div id="commentList" class="space-y-3">
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                <div class="flex justify-between text-xs">
+                                    <span class="font-bold text-brand-900">Mahasiswa Biologi</span>
+                                    <span class="text-slate-400">Baru saja</span>
+                                </div>
+                                <p class="text-xs text-slate-700">Mengapa penghambat SGLT2 sangat efektif digunakan sebagai terapi diabetes tipe-2?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: KESIMPULAN -->
+            <section id="tab-kesimpulan" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Rangkuman Akhir</span>
+                        <h2 class="text-xl font-bold text-slate-900">Kesimpulan Makalah Sistem Perkemihan</h2>
+                    </div>
+
+                    <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+                        <div class="p-4 bg-brand-50/50 rounded-xl border border-brand-100 space-y-2">
+                            <h4 class="font-bold text-brand-900">1. Integritas Anatomi & Fisiologi</h4>
+                            <p>Sistem perkemihan tersusun dari organ makroskopis (Ginjal, Ureter, Kandung Kemih, Uretra) dan mikroskopis (Nefron). Kolaborasi ketiga tahap pembentukan urine (Filtrasi Glomerulus, Reabsorpsi Tubulus, dan Sekresi/Augmentasi) menjamin tubuh menyaring sisa metabolisme sekaligus mempertahankan zat nutrisi esensial.</p>
+                        </div>
+
+                        <div class="p-4 bg-brand-50/50 rounded-xl border border-brand-100 space-y-2">
+                            <h4 class="font-bold text-brand-900">2. Koordinasi Hormonal & Homeostasis</h4>
+                            <p>Keseimbangan cairan, volume darah, dan osmolaritas urine diregulasi secara presisi oleh interaksi antagonis/sinergis antara sistem **RAAS**, hormon **ADH (Vasopresin)**, dan **ANP**.</p>
+                        </div>
+
+                        <div class="p-4 bg-brand-50/50 rounded-xl border border-brand-100 space-y-2">
+                            <h4 class="font-bold text-brand-900">3. Regulasi Keseimbangan Asam-Basa</h4>
+                            <p>Ginjal bertindak sebagai pengatur jangka panjang pH tubuh melalui reabsorpsi bikarbonat (HCO3-), ekskresi ion hidrogen (H+), dan sintesis bikarbonat baru via buffer amonium (NH4+) serta asam tertitrasi.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: DAFTAR PUSTAKA -->
+            <section id="tab-pustaka" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Referensi Ilmiah</span>
+                        <h2 class="text-xl font-bold text-slate-900">Daftar Pustaka</h2>
+                    </div>
+
+                    <div class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
+                        <p class="pl-6 -indent-6">Boone, M., & Deen, P. M. T. (2018). Physiology and pathophysiology of the vasopressin-regulated renal water reabsorption. <em>Pflügers Archiv - European Journal of Physiology</em>, 456, 1005–1024.</p>
+                        <p class="pl-6 -indent-6">Bani, R. F. M., Amalo, F. A., & Selan, Y. N. (2020). Gambaran anatomi dan histologi ginjal dan vesika urinaria pada musang luwak (Paradoxurus hermaphroditus) di Pulau Timor. <em>Jurnal Veteriner Nusantara</em>, 3(1), 74–84.</p>
+                        <p class="pl-6 -indent-6">Centers for Disease Control and Prevention. (2026). Urinary tract infection basics. CDC.</p>
+                        <p class="pl-6 -indent-6">Cuzzo, B., Padala, S. A., & Lappin, S. L. (2023). <em>Physiology, vasopressin</em>. StatPearls Publishing.</p>
+                        <p class="pl-6 -indent-6">Hamm, L. L., Nakhoul, N., & Hering-Smith, K. S. (2018). Acid-base homeostasis. <em>Clinical Journal of the American Society of Nephrology</em>, 10(12), 2232–2242.</p>
+                        <p class="pl-6 -indent-6">Hendrajaya, A. (2021). Terapi penghambat Sodium Glucose pengobatan Diabetes Melitus Tipe-2 (DM-2): tinjauan pustaka. <em>Intisari Sains Medis</em>, 12(1), 131–136.</p>
+                        <p class="pl-6 -indent-6">National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK). (n.d.). Kidney disease & Urologic diseases topics. National Institutes of Health.</p>
+                        <p class="pl-6 -indent-6">Sandefur, C. C., & Jialal, I. (2023). <em>Atrial natriuretic peptide</em>. StatPearls Publishing.</p>
+                        <p class="pl-6 -indent-6">Soesilawati, P. (2020). <em>Histologi kedokteran dasar</em>. Airlangga University Press.</p>
+                        <p class="pl-6 -indent-6">Yusri, Y. F., Amalia, L., & Lisni, I. (2019). Studi Penggunaan Obat Untuk Menangani Gangguan Natrium dan Kalium Pasien Penyakit Ginjal Terminal di RS Muhammadiyah Bandung. <em>Jurnal Sains Farmasi & Klinis</em>, 5(3), 233–242.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: UCAPAN TERIMA KASIH -->
+            <section id="tab-thanks" class="tab-content hidden space-y-6">
+                <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-8 sm:p-12 rounded-3xl shadow-xl text-center space-y-6">
+                    <div class="inline-p-3 bg-white/10 rounded-full p-4 mb-2">
+                        <i class="fa-solid fa-heart text-red-400 text-4xl"></i>
+                    </div>
+
+                    <h2 class="text-2xl sm:text-3xl font-extrabold">Ucapan Terima Kasih</h2>
+
+                    <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                        Puji syukur kami panjatkan ke hadirat Tuhan Yang Maha Esa atas terselesaikannya penyusunan makalah dan presentasi interactive WebView ini.
+                    </p>
+
+                    <div class="p-6 bg-white/10 backdrop-blur-md rounded-2xl max-w-lg mx-auto border border-white/10 text-left space-y-3 text-xs sm:text-sm">
+                        <p class="font-bold text-brand-300">Penulis Menyampaikan Terima Kasih Kepada:</p>
+                        <ul class="space-y-2 list-disc list-inside text-slate-200">
+                            <li><strong>Dr. Dani Ramdani, S.Pd., M.Pd.</strong> selaku Dosen Pengampu mata kuliah Anatomi Fisiologi Tubuh Manusia.</li>
+                            <li>Segenap Dosen dan Civitas Akademika Jurusan Pendidikan Biologi FKIP Universitas Siliwangi.</li>
+                            <li>Rekan-rekan Mahasiswa Biologi Angkatan 2026 atas diskusi dan dukungannya.</li>
+                        </ul>
+                    </div>
+
+                    <p class="text-xs text-brand-300 italic pt-4">Tasikmalaya, 2026 — Penyusun Kelompok 5</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Image Modal Lightbox -->
+    <div id="imageModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+                <h3 id="modalTitle" class="text-xs sm:text-sm font-bold truncate pr-4">Detail Gambar</h3>
+                <button onclick="closeModal('imageModal')" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-4 overflow-auto flex-1 flex items-center justify-center bg-slate-100">
+                <img id="modalImage" src="" alt="Expanded View" class="max-w-full max-h-[70vh] object-contain rounded-lg">
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick GFR Calculator Modal -->
+    <div id="quickCalcModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-brand-600"></i> Simulator Tekanan Filtrasi (NFP)
+                </h3>
+                <button onclick="closeModal('quickCalcModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Tekanan Hidrostatik Glomerulus (P<sub>G</sub>) [mmHg]:</label>
+                    <input id="calcPg" type="number" value="55" class="w-full p-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Tekanan Hidrostatik Kapsula Bowman (P<sub>B</sub>) [mmHg]:</label>
+                    <input id="calcPb" type="number" value="15" class="w-full p-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Tekanan Osmotik Koloid Plasma (&pi;<sub>G</sub>) [mmHg]:</label>
+                    <input id="calcPie" type="number" value="30" class="w-full p-2 border border-slate-300 rounded-lg">
+                </div>
+
+                <button onclick="calculateNFP()" class="w-full py-2 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition-colors">Hitung NFP</button>
+
+                <div id="nfpResult" class="p-3 bg-brand-50 border border-brand-200 rounded-lg text-center font-bold text-brand-900 text-sm">
+                    Hasil NFP: 10 mmHg (Filtrasi Normal)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Navigation and Interactions -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('tab-active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('nav-' + tabId).classList.add('tab-active');
+
+            // Close mobile sidebar if open
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Sub-tab switching logic for Materi
+        function switchSubTab(subId) {
+            document.querySelectorAll('.sub-materi-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.subnav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+
+            document.getElementById(subId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + subId.replace('materi-', 'sub-'));
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-700');
+                activeBtn.classList.add('bg-brand-600', 'text-white');
+            }
+        }
+
+        // Modal Helpers
+        function expandImage(src, title) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // GFR / NFP Calculator Logic
+        function calculateNFP() {
+            const pg = parseFloat(document.getElementById('calcPg').value) || 0;
+            const pb = parseFloat(document.getElementById('calcPb').value) || 0;
+            const pie = parseFloat(document.getElementById('calcPie').value) || 0;
+
+            const nfp = pg - (pb + pie);
+            const resDiv = document.getElementById('nfpResult');
+            resDiv.innerHTML = `Hasil NFP: <strong>${nfp} mmHg</strong> ${nfp > 0 ? '(Penyaringan Berjalan Normal)' : '(Filtrasi Terhenti)'}`;
+        }
+
+        // Quiz State Logic
+        let currentScore = 0;
+        const answered = { 1: false, 2: false, 3: false };
+
+        function checkQuiz(qNum, choice, isCorrect) {
+            if(answered[qNum]) return;
+            answered[qNum] = true;
+
+            const feedback = document.getElementById(`q${qNum}-feedback`);
+            feedback.classList.remove('hidden');
+
+            if(isCorrect) {
+                currentScore++;
+                feedback.innerText = '✓ Benar! Jawaban Anda tepat.';
+                feedback.className = 'text-xs font-semibold text-emerald-600 mt-1';
+            } else {
+                feedback.innerText = '✗ Kurang tepat. Silakan ulas kembali materi.';
+                feedback.className = 'text-xs font-semibold text-rose-600 mt-1';
+            }
+
+            document.getElementById('quizScoreDisplay').innerText = `Skor: ${currentScore} / 3`;
+        }
+
+        // Add Comment simulation
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            if(!input.value.trim()) return;
+
+            const list = document.getElementById('commentList');
+            const newComment = document.createElement('div');
+            newComment.className = 'p-3 bg-brand-50/60 rounded-xl border border-brand-100 space-y-1';
+            newComment.innerHTML = `
+                <div class="flex justify-between text-xs">
+                    <span class="font-bold text-brand-900">Peserta Diskusi</span>
+                    <span class="text-slate-400">Baru saja</span>
+                </div>
+                <p class="text-xs text-slate-700">${input.value}</p>
+            `;
+            list.prepend(newComment);
+            input.value = '';
+        }
+
+        // Mobile Sidebar Toggle Listener
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+        });
+        document.getElementById('closeSidebarBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+        });
+    </script>
+</body>
+</html>
